@@ -1,0 +1,16 @@
+{
+  "name": "club_data",
+  "version": "1.0.0",
+  "description": "Clean database webapp for clubs to store and autotext all members",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Alex Jarvis",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*"
+  }
+}
