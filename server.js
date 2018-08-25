@@ -16,9 +16,7 @@ var logger = (req, res, next) => {
     next();
 };
 
-// app.use(express.static(path.join(__dirname, './client')));
 app.use(logger);
-// app.use('/', express.static(path.join(__dirname, './client/public')));
 app.use('*', router);
 
 app.use((req, res, next) => {
@@ -30,7 +28,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.send(err.message);
-    console.log('\t' + req.path + ' does not exist 404');
+    console.log('\t' + req.path + err.message);
 });
 
 app.listen(port, () => {
