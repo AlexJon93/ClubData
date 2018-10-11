@@ -1,7 +1,18 @@
 const express = require('express');
 const bodyparser = require('body-parser');
 const path = require('path');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const port = 5000;
+const db = process.env.MONGOLAB_URI;
+
+mongoose
+    .connect(db, { useNewUrlParser: true })
+    .then(() => console.log('MongoDB connected...'))
+    .catch(err => console.log(err));
 
 var app = express();
 app.enable('trust proxy');
