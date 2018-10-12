@@ -4,6 +4,8 @@ const path = require('path');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+// import router from './routes/index.js';
+
 dotenv.config();
 
 const port = 5000;
@@ -34,7 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use(logger);
-app.use('/', router);
+app.use(router);
 
 app.use((req, res, next) => {
     var err = new Error('404 - File Not Found!');
