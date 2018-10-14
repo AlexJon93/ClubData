@@ -36,6 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use(logger);
+app.use(bodyparser.json());
 app.use(router);
 
 app.use((req, res, next) => {
@@ -52,6 +53,6 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
     console.log('Server started on port ' + port);
-});
+}).on('error', console.log);
 
 module.exports = app;
