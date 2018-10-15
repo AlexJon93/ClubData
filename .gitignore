@@ -1,5 +1,7 @@
 #dependencies
 server/node_modules
+.env
 
 #misc
 /.vscode
+npm-debug.log
