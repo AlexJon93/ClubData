@@ -5,7 +5,9 @@ class Login extends React.Component {
         super(props);
         this.state = {
             email: "",
-            password: ""
+            club: "",
+            password: "",
+            signup: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -13,9 +15,9 @@ class Login extends React.Component {
 
     handleChange(e) {
         const target = e.target;
-        const value = target.value;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-
+        console.log(name + ' is ' + value);
         this.setState({
             [name]: value
         });
@@ -40,6 +42,23 @@ class Login extends React.Component {
                     <input
                     type="password"
                     name="password"
+                    onChange={this.handleChange}/>
+                </label>
+                { this.state.signup &&
+                    <label>
+                        Club Name:
+                        <input
+                        type="text"
+                        name="club"
+                        onChange={this.handleChange}/>
+                    </label>
+                }
+                <label>
+                    Sign-Up?
+                    <input
+                    type="checkbox"
+                    name="signup"
+                    checked={this.state.signup}
                     onChange={this.handleChange}/>
                 </label>
                 <input type="submit" value="Submit"/>
