@@ -1,30 +1,40 @@
 import React from 'react';
-import '../stylesheets/MemberList.css'
+import axios from 'axios';
+import Spinner from './Spinner'
+import '../stylesheets/MemberList.css';
 
 class MemberList extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
-          data: []
+            loading: true,
+            data: []
         };
     }
 
     componentDidMount() {
-        fetch('http://localhost:5000/user')
-          .then(response => response.json())
-          .then(data => this.setState({ data }));
+        axios.get('http://localhost:5000/users')
+            .then(res => {
+                const data = res.data;
+                console.log(data);
+                this.setState({
+                    data:data,
+                    loading:false
+                });
+            })
     }
 
     render(){
         return(
             <div>
-                <table className='memberListTable'>
-                    <MemberListHeader />
-                    <MemberRow user={data}/>
-                </table>
+                {
+                    this.state.loading ?
+                    <Spinner /> :
+                    <MemberListTable data={this.state.data}/>
+                    
+                }
             </div>
-            
         );
     }
 }
@@ -33,16 +43,9 @@ const MemberListHeader = () => {
     return(
         <thead>
             <tr className='memberListTableHeadRow'>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Age</th>
-                <th>Student Number</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Type of Study</th>
-                <th>Course</th>
-                <th>Postcode</th>
-                <th>Party Member</th>
+                <th>User ID</th>
+                <th>Club</th>
+                <th>Password</th>
             </tr>
         </thead>   
     );
@@ -50,20 +53,24 @@ const MemberListHeader = () => {
 
 const MemberRow = (props) => {
     return(
+        <tr className='memberListTableRow'>
+            <td>{props.user.userId}</td>
+            <td>{props.user.club}</td>
+            <td>{props.user.password}</td>
+        </tr>
+    );
+}
+
+const MemberListTable = (props) => {
+    return(
+        <table className='memberListTable'>
+        <MemberListHeader />
         <tbody>
-            <tr className='memberListTableRow'>
-                <td>{props.user.lName}</td>
-                <td>{props.user.fName}</td>
-                <td>{props.user.age}</td>
-                <td>{props.user.studentNo}</td>
-                <td>{props.user.phoneNo}</td>
-                <td>{props.user.email}</td>
-                <td>{props.user.studyType}</td>
-                <td>{props.user.course}</td>
-                <td>{props.user.postcode}</td>
-                <td>{props.user.member}</td>
-            </tr>
-        </tbody>   
+            {
+                props.data.map((user, index) => <MemberRow user={user} key={user._id}/>)
+            }
+        </tbody>  
+    </table>  
     );
 }
 
