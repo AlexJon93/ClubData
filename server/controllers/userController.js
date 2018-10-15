@@ -3,7 +3,7 @@ var UserInstance = require('../models/User');
 exports.create = (req, res) => {
 
     const user = new UserInstance({
-        userId: req.body.userId,
+        email: req.body.email,
         club: req.body.club,
         password: req.body.password
     });
@@ -12,7 +12,7 @@ exports.create = (req, res) => {
         .then(user => {
             return res.status(200).json({message: 'User created successfully'});
         }).catch(err => {
-            return res.status(400).json({message: 'Could not create user'});
+            return res.status(400).json({message: Object.values(err.errors)[0].message});
         });
 }
 
