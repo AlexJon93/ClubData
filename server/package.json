@@ -11,6 +11,7 @@
   "author": "Alex Jarvis",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.1",
     "body-parser": "*",
     "express": "*",
     "jsonwebtoken": "^8.3.0",

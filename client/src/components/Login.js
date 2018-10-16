@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 class Login extends React.Component {
     constructor(props) {
@@ -17,13 +18,30 @@ class Login extends React.Component {
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        console.log(name + ' is ' + value);
         this.setState({
             [name]: value
         });
     }
 
     handleSubmit(e) {
+        if(this.state.signup) {
+            axios.post('http://localhost:5000/users', {
+                email: this.state.email,
+                club: this.state.club,
+                password: this.state.password
+            })
+                .then(res => {
+                    alert(res.data.message);
+                });
+        } else {
+            axios.post('http://localhost:5000/login', {
+                email: this.state.email,
+                password: this.state.password
+            })
+                .then(res => {
+                    alert(res.data.message);
+                });
+        }
         e.preventDefault();
     }
 

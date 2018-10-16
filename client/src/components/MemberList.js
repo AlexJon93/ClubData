@@ -17,7 +17,6 @@ class MemberList extends React.Component {
         axios.get('http://localhost:5000/users')
             .then(res => {
                 const data = res.data;
-                console.log(data);
                 this.setState({
                     data:data,
                     loading:false
