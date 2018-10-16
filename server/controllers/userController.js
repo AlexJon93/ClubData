@@ -65,7 +65,8 @@ exports.getOne = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-    UserInstance.findOneAndDelete({email: req.params.email})
+    const userEmail = decodeURI(req.params.email);
+    UserInstance.findOneAndDelete({email: userEmail})
         .then(user => {
             if(!user) {
                 return res.status(404).json({message: 'User with email ' + req.params.email + ' not found'});
