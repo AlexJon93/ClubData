@@ -8,16 +8,17 @@ class App extends Component {
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
     this.state = {
-      loggedin: false
+      loggedin: false,
+      clubName: 'Labor Club'
     }
   }
 
   render() {
     return (
-      <div className="App">
+      <div className='App'>
         { this.state.loggedin ?
           <div>
-            <h1>ClubData</h1>
+            <h1 className='DataTitle'>{this.state.clubName}</h1>
             <MemberList/>
           </div> :
           <Login onLogin={this}/>

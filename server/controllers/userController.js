@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 var UserInstance = require('../models/User');
 const saltRounds = 10;
@@ -94,7 +95,16 @@ exports.login = (req, res) => {
                         return res.status(500).json({message: 'Error logging in'});
                     } else {
                         if(result) {
-                            return res.status(200).json(user);  
+
+                            var token = jwt.sign({
+                                auth: 'secretpass',
+                                exp: Math.floor(new Date().getTime/1000) + 24*60*60
+                            }, process.env.JWT_KEY);
+
+                            return res.status(200).json({
+                                result: user,
+                                token:token,
+                            });
                         } else {
                             return res.status(400).json({message: 'Email address or password is incorrect'});
                         }
