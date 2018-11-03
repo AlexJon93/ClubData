@@ -3,7 +3,7 @@ const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-// import router from './routes/index.js';
+var router = require('./routes/index');
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ mongoose
 var app = express();
 app.enable('trust proxy');
 
-var router = require('./routes/index');
+
 var logger = (req, res, next) => {
     var ip = req.ip;
     var date = new Date();
@@ -48,6 +48,7 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.send(err.message);
     console.log('\t' + req.path + err.message);
+    next();
 });
 
 app.listen(port, () => {

@@ -8,7 +8,7 @@ class App extends Component {
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
     this.state = {
-      loggedin: false,
+      loggedin: true,
       clubName: 'Labor Club'
     }
   }

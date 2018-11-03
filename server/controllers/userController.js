@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 var UserInstance = require('../models/User');
 const saltRounds = 10;
@@ -47,7 +46,7 @@ exports.getAll = (req, res) => {
 }
 
 exports.getOne = (req, res) => {
-    const userEmail = decodeURI(req.params.email)
+    const userEmail = decodeURI(req.params.email);
     UserInstance.findOne({email: userEmail})
         .then(user => {
             if(!user) {
@@ -55,13 +54,13 @@ exports.getOne = (req, res) => {
             }
             else {
                 return res.status(200).json(user);
-                // {message: 'User with id ' + user.userId + ' from ' + user.club + ' found'}
             }
         }).catch(err => {
             if(err.kind === 'ObjectId') {
                 return res.status(404).json({message: 'User with email ' + req.params.email + ' not found'});
             }
-            return res.status(500).json({message: 'Error getting user with email ' + req.params.email});
+            console.log(err);
+            return;
         });
 };
 
@@ -80,36 +79,5 @@ exports.delete = (req, res) => {
                 return res.status(404).json({message: 'User with email ' + req.params.email + ' not found'});
             }
             return res.status(500).json({message: 'Error deleting user with email ' + req.params.email});
-        })
-}
-
-exports.login = (req, res) => {
-    UserInstance.findOne({email: req.body.email})
-        .then(user => {
-            if(!user) {
-                return res.status(404).json({message: 'User with email ' + req.body.email + ' not found'});
-            } else {
-                bcrypt.compare(req.body.password, user.password, (err, result) => {
-                    if(err) {
-                        console.log(err);
-                        return res.status(500).json({message: 'Error logging in'});
-                    } else {
-                        if(result) {
-
-                            var token = jwt.sign({
-                                auth: 'secretpass',
-                                exp: Math.floor(new Date().getTime/1000) + 24*60*60
-                            }, process.env.JWT_KEY);
-
-                            return res.status(200).json({
-                                result: user,
-                                token:token,
-                            });
-                        } else {
-                            return res.status(400).json({message: 'Email address or password is incorrect'});
-                        }
-                    }
-                });
-            }
         })
 }
