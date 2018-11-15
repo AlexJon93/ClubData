@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+var logger = require('../config/logger');
 var UserInstance = require('../models/User');
 
 function getTokenFromHeader (req) {
@@ -13,15 +14,20 @@ function getTokenFromHeader (req) {
 }
 
 exports.checkToken = (req, callback) => {
+    logger.verbose('Checking token exists');
     if((token = getTokenFromHeader(req)) !== null) {
+        logger.verbose('Token is not null')
         jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
             if(err) {
-                console.log(err.message);
+                logger.verbose(err.message);
                 callback(false);
             } else {
                 callback(true);
             }
         });
+    } else {
+        logger.verbose('Token is null');
+        callback(false);
     }
 }
 

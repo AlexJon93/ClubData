@@ -15,6 +15,7 @@
     "body-parser": "*",
     "express": "*",
     "jsonwebtoken": "^8.3.0",
-    "mongoose": "*"
+    "mongoose": "*",
+    "winston": "^3.1.0"
   }
 }
