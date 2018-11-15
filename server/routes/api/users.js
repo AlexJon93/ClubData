@@ -6,10 +6,10 @@ const user_controller = require('../../controllers/userController');
 const auth = require('../../config/auth.js');
 
 router.use((req, res, next) => {
-    logger.verbose('Moving through Auth');
+    logger.debug('Moving through Auth');
 
     if(req.path === '/login') {
-        logger.verbose('Auth found request for login')
+        logger.debug('Auth found request for login')
         auth.login(req, res);
         return;
     }
@@ -17,11 +17,11 @@ router.use((req, res, next) => {
     auth.checkToken(req, (valid) => {
         logger.verbose('Request is for protected route, checking token');
         if(valid){
-            logger.verbose('Token is not valid');
+            logger.debug('Token is valid');
             next();
         } else {
-            logger.verbose('Token is valid');
-            res.redirect('/');
+            logger.debug('Token is not valid');
+            res.status(500).json({message: 'Token was not valid', valid: false});
         }
     });
 });

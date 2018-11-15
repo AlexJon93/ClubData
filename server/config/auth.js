@@ -14,19 +14,19 @@ function getTokenFromHeader (req) {
 }
 
 exports.checkToken = (req, callback) => {
-    logger.verbose('Checking token exists');
+    logger.debug('Checking token exists');
     if((token = getTokenFromHeader(req)) !== null) {
-        logger.verbose('Token is not null')
+        logger.debug('Token is not null')
         jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
             if(err) {
-                logger.verbose(err.message);
+                logger.error(err.message);
                 callback(false);
             } else {
                 callback(true);
             }
         });
     } else {
-        logger.verbose('Token is null');
+        logger.debug('Token is null');
         callback(false);
     }
 }
