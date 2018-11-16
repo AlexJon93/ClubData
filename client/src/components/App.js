@@ -8,7 +8,7 @@ class App extends Component {
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
     this.state = {
-      loggedin: true,
+      loggedin: false,
       clubName: 'Labor Club'
     }
   }
@@ -21,7 +21,7 @@ class App extends Component {
             <h1 className='DataTitle'>{this.state.clubName}</h1>
             <MemberList/>
           </div> :
-          <Login onLogin={this}/>
+          <Login onLogin={this.handleLogin}/>
         }
         
       </div>

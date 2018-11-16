@@ -1,5 +1,8 @@
 import React from 'react';
+import Cookies from 'universal-cookie';
 import axios from 'axios';
+
+const cookies = new Cookies();
 
 class Login extends React.Component {
     constructor(props) {
@@ -34,12 +37,22 @@ class Login extends React.Component {
                     alert(res.data.message);
                 });
         } else {
-            axios.post('http://localhost:5000/login', {
+            console.log('logging in');
+            axios.post('http://localhost:5000/users/login', {
                 email: this.state.email,
                 password: this.state.password
             })
                 .then(res => {
-                    alert(res.data.message);
+                    if(res.data.token && res.data.token !== undefined) {
+                        cookies.set('jwt', res.data.token);
+                        this.props.onLogin(true);
+                    } else {
+                        console.log(res);
+                        alert('There was an issue logging in. Check email/password and try again');
+                    }
+                })
+                .catch(err => {
+                    console.log(err.response);
                 });
         }
         e.preventDefault();

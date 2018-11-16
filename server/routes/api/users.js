@@ -6,16 +6,24 @@ const user_controller = require('../../controllers/userController');
 const auth = require('../../config/auth.js');
 
 router.use((req, res, next) => {
-    logger.debug('Moving through Auth');
-
+    logger.verbose('Moving through Auth');
     if(req.path === '/login') {
-        logger.debug('Auth found request for login')
-        auth.login(req, res);
+        logger.verbose('Auth found request for login')
+        auth.login(req, (result) => {
+            logger.debug('Received result to callback function');
+            if(result.token && result.token !== undefined) {
+                logger.verbose('Login was successful');
+                res.status(200).json(result);
+            } else {
+                logger.verbose('Login was unsuccessful');
+                res.status(result.status).json({message: result.message});
+            }
+        });
         return;
     }
-    
+
+    logger.verbose('Request is for protected route, checking token');
     auth.checkToken(req, (valid) => {
-        logger.verbose('Request is for protected route, checking token');
         if(valid){
             logger.debug('Token is valid');
             next();

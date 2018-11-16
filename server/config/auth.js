@@ -5,6 +5,7 @@ var logger = require('../config/logger');
 var UserInstance = require('../models/User');
 
 function getTokenFromHeader (req) {
+    // logger.debug(JSON.stringify(req.headers));
     const { headers: {authorization}} = req;
     if(authorization && authorization.split(' ')[0] === 'Bearer') {
         return authorization.split(' ')[1];
@@ -31,32 +32,40 @@ exports.checkToken = (req, callback) => {
     }
 }
 
-exports.login = (req, res) => {
+exports.login = (req, callback) => {
+    logger.verbose('Checking login details');
     if(!req.body.email || req.body.email === undefined) {
-        return res.status(500).json({message: 'Login details missing'});
+        logger.debug('Email is undefined or null');
+        callback({status: 400, message: 'Login details missing'});
+        return;
     }
 
     UserInstance.findOne({email: req.body.email})
         .then(user => {
             if(!user) {
-                return res.status(404).json({message: 'User with email ' + req.body.email + ' not found'});
+                logger.debug('Did not find user with given email');
+                callback({status: 404, message: 'User with email ' + req.body.email + ' not found'});
             } else {
+                logger.debug('Found user with given email');
                 bcrypt.compare(req.body.password, user.password, (err, result) => {
+                    logger.verbose('Checking user password');
                     if(err) {
-                        console.log(err);
-                        return res.status(500).json({message: 'Error logging in'});
+                        logger.error(err);
+                        callback({status: 500, message: 'Error logging in'});
                     } else {
                         if(result) {
+                            logger.debug('User password is valid');
                             var token = jwt.sign({
                                 user: user.email,
                                 exp: Math.floor(new Date().getTime()/1000) + (60*60)
                             }, process.env.JWT_KEY);
-
-                            return res.status(200).json({
+                            logger.debug('Sending token to callback');
+                            callback({
                                 token: token,
                             });
                         } else {
-                            return res.status(400).json({message: 'Email address or password is incorrect'});
+                            logger.debug('User password is not valid');
+                            callback({status: 404, message: 'Email address or password is incorrect'});
                         }
                     }
                 });
