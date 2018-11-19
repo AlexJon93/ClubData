@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 
+var logger = require('../config/logger');
 var UserInstance = require('../models/User');
 const saltRounds = 10;
 
@@ -14,7 +15,7 @@ exports.create = (req, res) => {
     
     bcrypt.hash(user.password, saltRounds, (err, hash) => {
         if(err) {
-            console.log(err);
+            logger.error(err);
             return res.status(500).json({message: "Issue saving user"});
         }
         else {
@@ -38,6 +39,10 @@ exports.getAll = (req, res) => {
                 return res.status(404).json({message: 'No users found'});
             }
             else {
+                users.map(user => {
+                    user.password = undefined;
+                    return user;
+                })
                 return res.status(200).json(users);
             }
         }).catch(err => {
@@ -53,6 +58,7 @@ exports.getOne = (req, res) => {
                 return res.status(404).json({message: 'User with email ' + req.params.email + ' not found'});
             }
             else {
+                user.password = undefined;
                 return res.status(200).json(user);
             }
         }).catch(err => {

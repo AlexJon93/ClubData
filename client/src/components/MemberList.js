@@ -63,9 +63,8 @@ const MemberListHeader = () => {
 const MemberRow = (props) => {
     return(
         <tr className='memberListTableRow'>
-            <td>{props.user.userId}</td>
+            <td>{props.user.email}</td>
             <td>{props.user.club}</td>
-            <td>{props.user.password}</td>
         </tr>
     );
 }
