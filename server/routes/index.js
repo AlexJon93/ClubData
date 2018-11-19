@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// var userController = require('../controllers/userController');
-
 router.use('/users', require('./api/users'));
+// router.post('/users/login', auth.login);
 
 router.get('/', (req, res) => {
     res.status(200).json({message: 'Hello there from home!'});

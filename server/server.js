@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyparser = require('body-parser');
-const path = require('path');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
-// import router from './routes/index.js';
+var router = require('./routes/index');
+var logger = require('./config/logger');
 
 dotenv.config();
 
@@ -13,21 +14,23 @@ const db = process.env.MONGOLAB_URI;
 
 mongoose
     .connect(db, { useNewUrlParser: true })
-    .then(() => console.log('MongoDB connected...'))
-    .catch(err => console.log(err));
+    .then(() => logger.info('MongoDB connected...'))
+    .catch(err => logger.error(err));
 
 var app = express();
 app.enable('trust proxy');
 
-var router = require('./routes/index');
-var logger = (req, res, next) => {
+
+var reqlog = (req, res, next) => {
     var ip = req.ip;
     var date = new Date();
 
-    console.log('request received at ' + date.toUTCString() + ' from ' + ip + ' for ' + req.path);
+    logger.info('request received at ' + date.toUTCString() + ' from ' + ip + ' for ' + req.path);
     
     next();
 };
+
+app.use(cors());
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -35,7 +38,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(logger);
+app.use(reqlog);
 app.use(bodyparser.json());
 app.use(router);
 
@@ -48,11 +51,12 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.send(err.message);
-    console.log('\t' + req.path + err.message);
+    logger.error('\t' + req.path + err.message);
+    next();
 });
 
 app.listen(port, () => {
-    console.log('Server started on port ' + port);
+    logger.info('Server started on port ' + port);
 }).on('error', console.log);
 
 module.exports = app;

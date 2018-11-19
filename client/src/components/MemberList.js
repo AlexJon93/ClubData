@@ -1,7 +1,10 @@
 import React from 'react';
+import Cookies from 'universal-cookie';
 import axios from 'axios';
 import Spinner from './Spinner'
 import '../stylesheets/MemberList.css';
+
+const cookies = new Cookies();
 
 class MemberList extends React.Component {
 
@@ -14,10 +17,16 @@ class MemberList extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:5000/users')
+        var config = {
+            headers: {'Authorization': 'Bearer ' + cookies.get('jwt')}
+        }
+
+        axios.get(
+            'http://localhost:5000/users',
+            config
+        )
             .then(res => {
                 const data = res.data;
-                console.log(data);
                 this.setState({
                     data:data,
                     loading:false
@@ -54,9 +63,8 @@ const MemberListHeader = () => {
 const MemberRow = (props) => {
     return(
         <tr className='memberListTableRow'>
-            <td>{props.user.userId}</td>
+            <td>{props.user.email}</td>
             <td>{props.user.club}</td>
-            <td>{props.user.password}</td>
         </tr>
     );
 }

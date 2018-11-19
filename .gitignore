@@ -5,3 +5,4 @@ server/node_modules
 #misc
 /.vscode
 npm-debug.log
+/misc

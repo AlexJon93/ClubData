@@ -11,9 +11,12 @@
   "author": "Alex Jarvis",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.1",
     "body-parser": "*",
+    "cors": "^2.8.5",
     "express": "*",
     "jsonwebtoken": "^8.3.0",
-    "mongoose": "*"
+    "mongoose": "*",
+    "winston": "^3.1.0"
   }
 }
